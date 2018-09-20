@@ -32,6 +32,8 @@ defmodule BattleNetwork.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:httpoison, "~> 0.13"},
+      {:poison, "~> 3.1"},
       {:phoenix, "~> 1.3.4"},
       {:phoenix_pubsub, "~> 1.0"},
       {:gettext, "~> 0.11"},
