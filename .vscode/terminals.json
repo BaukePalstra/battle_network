@@ -1,0 +1,81 @@
+{
+    "autorun": false,
+    "terminals": [
+        {
+            "name": "Run console",
+            "description": "Run an iex console",
+            "focus": true,
+            "commands": [
+                "cd ../infra",
+                "docker-compose run server iex -S mix"
+            ]
+        },
+        {
+            "name": "Run server",
+            "description": "Run the Phoenix web server",
+            "focus": true,
+            "commands": [
+                "cd ../infra",
+                "docker-compose up server"
+            ]
+        },
+        {
+            "name": "Run Mix task",
+            "description": "Run a mix task",
+            "focus": true,
+            "execute": false,
+            "commands": [
+                "cd ../infra",
+                "docker-compose run server mix "
+            ]
+        },
+        {
+            "name": "Run tests",
+            "description": "Run your test suite",
+            "focus": true,
+            "commands": [
+                "cd ../infra",
+                "docker-compose run -e MIX_ENV=test server mix test"
+            ]
+        },
+        {
+            "name": "Run single test",
+            "description": "Run your currently opened test",
+            "focus": true,
+            "commands": [
+                "cd ../infra",
+                "SET test_path=[relativeFile]",
+                "for /f %i in ('echo %test_path% ^| sed \"s/\\(.*\\)\\\\\\\\test//g\"') do set test_path=test%i",
+                "set test_path=%test_path:\\=/%",
+                "docker-compose run -e MIX_ENV=test server mix test %test_path%"
+            ]
+        },
+        {
+            "name": "Run migrations",
+            "description": "Run migrations",
+            "focus": true,
+            "commands": [
+                "cd ../infra",
+                "docker-compose run server mix ecto.migrate"
+            ]
+        },
+        {
+            "name": "Reset database",
+            "description": "Run mix ecto.reset",
+            "focus": true,
+            "commands": [
+                "cd ../infra",
+                "docker-compose run server mix ecto.reset"
+            ]
+        },
+        {
+            "name": "Get dependencies",
+            "description": "Run mix deps.get",
+            "focus": true,
+            "commands": [
+                "cd ../infra",
+                "docker-compose run server mix deps.get"
+            ]
+        }
+    ]
+}

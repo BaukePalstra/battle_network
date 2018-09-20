@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  network:
+    build: 
+      context: .
+      target: base
+    command: "iex -S mix phx.server"
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 4000:4000
