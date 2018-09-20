@@ -6,11 +6,13 @@ defmodule BattleNetwork.Application do
   def start(_type, _args) do
     import Supervisor.Spec
 
+
     # Define workers and child supervisors to be supervised
     children = [
       # Start the endpoint when the application starts
       supervisor(BattleNetworkWeb.Endpoint, []),
       worker(BattleNetwork.Runner, []),
+      worker(BattleNetwork.Field.Marshall, []),
       worker(BattleNetwork.Tanks.Captain, []),
       # Start your own worker by calling: BattleNetwork.Worker.start_link(arg1, arg2, arg3)
       # worker(BattleNetwork.Worker, [arg1, arg2, arg3]),
@@ -19,7 +21,10 @@ defmodule BattleNetwork.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: BattleNetwork.Supervisor]
-    Supervisor.start_link(children, opts)
+    r = Supervisor.start_link(children, opts)
+    BattleNetwork.Tanks.Captain.add_sergeant("rosie")
+    BattleNetwork.Tanks.Captain.add_sergeant("kitt")
+    r
   end
 
   # Tell Phoenix to update the endpoint configuration

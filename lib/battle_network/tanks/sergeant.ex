@@ -1,7 +1,9 @@
 defmodule BattleNetwork.Tanks.Sergeant do
   use GenServer
-  alias BattleNetwork.Tanks.Sergeant
-  defstruct [:id, :name, :health, :command]
+  alias BattleNetwork.Tanks.{Sergeant, Captain}
+  alias BattleNetwork.Field.{Marshall}
+
+  defstruct [:id, :name, :health, :command, :endpoint]
 
   def start_link(sergeant) do
     GenServer.start_link(__MODULE__, sergeant, name: sergeant_id(sergeant.id))
@@ -12,14 +14,14 @@ defmodule BattleNetwork.Tanks.Sergeant do
   end
 
   def handle_call(:act, _from, state) do
-    # Http request state.endpoint
-    command = %{forward: 5}
+    {:ok, command} = BattleNetwork.Link.post(state.endpoint, Marshall.get)
     state = Map.put(state, :command, command)
     {:reply, state, state}
   end
 
   def act(sergeant) do
-    GenServer.call(sergeant_id(sergeant.id), :act)
+    sergeant = GenServer.call(sergeant_id(sergeant.id), :act)
+    Captain.update_sergeant(sergeant)
   end
 
   def sergeant_id(id) do

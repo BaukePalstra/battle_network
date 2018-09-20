@@ -1,8 +1,8 @@
-defmodule BattleNetwork.Field.Field do
+defmodule BattleNetwork.Field.Marshall do
   use Agent
 
-  def start_link(field) do
-    Agent.start_link(fn -> field end, name: __MODULE__)
+  def start_link() do
+    Agent.start_link(fn -> %{} end, name: __MODULE__)
   end
 
   def get() do

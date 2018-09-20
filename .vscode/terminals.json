@@ -74,7 +74,7 @@
             "focus": true,
             "commands": [
                 "cd ../infra",
-                "docker-compose run server mix deps.get"
+                "docker-compose run network mix deps.get"
             ]
         }
     ]

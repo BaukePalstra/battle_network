@@ -10,9 +10,9 @@ defmodule BattleNetwork.Tanks.Captain do
     {:ok, state}
   end
 
-  def handle_cast(:action, _from, sergeants) do
+  def handle_cast(:action, sergeants) do
     for sergeant <- sergeants do
-      sergeant.act(sergeant)
+      Sergeant.act(sergeant)
     end
     {:noreply, sergeants}
   end
@@ -41,8 +41,11 @@ defmodule BattleNetwork.Tanks.Captain do
     GenServer.cast(__MODULE__, :action)
   end
 
-  def add_sergeant(sergeant) do
-    GenServer.cast(__MODULE__, {:add, sergeant})
+  def add_sergeant(name) do
+    endpoint = "https://battletank.nl/#{name}"
+    #fetch id
+    id = name
+    GenServer.cast(__MODULE__, {:add, %Sergeant{name: name, id: id, command: %{}, health: 100, endpoint: endpoint}})
   end
 
   def update_sergeant(sergeant) do
