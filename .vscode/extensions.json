@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "eamodio.gitlens",
+        "EditorConfig.editorconfig",
+        "fabiospampinato.vscode-terminals",
+        "ms-vscode.atom-keybindings",
+        "PeterJausovec.vscode-docker",
+        "JakeBecker.elixir-ls",
+    ]
+}

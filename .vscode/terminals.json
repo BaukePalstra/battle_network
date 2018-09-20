@@ -7,7 +7,7 @@
             "focus": true,
             "commands": [
                 "cd ../infra",
-                "docker-compose run server iex -S mix"
+                "docker-compose run network iex -S mix"
             ]
         },
         {
