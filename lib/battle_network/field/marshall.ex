@@ -1,15 +1,27 @@
 defmodule BattleNetwork.Field.Marshall do
-  use Agent
+  use GenServer
 
   def start_link() do
-    Agent.start_link(fn -> %{} end, name: __MODULE__)
+    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
+  end
+
+  def init(args), do: {:ok, args}
+
+  def handle_call(:get, _from, field) do
+    {:reply, field, field}
+  end
+
+  def handle_cast({:resolve, commands}, field) do
+    # request with commands
+    {:ok, field} = BattleNetwork.Link.post("https://api.battletank.nl/tick", %{commands: commands})
+    {:noreply, field}
   end
 
   def get() do
-    Agent.get(__MODULE__, & &1)
+    GenServer.call(__MODULE__, :get)
   end
 
-  def set(field) do
-    Agent.update(__MODULE__, fn _ -> field end)
+  def resolve(commands) do
+    GenServer.cast(__MODULE__, {:resolve, commands})
   end
 end

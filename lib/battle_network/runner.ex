@@ -1,5 +1,7 @@
 defmodule BattleNetwork.Runner do
   use GenServer
+  alias BattleNetwork.Field.Marshall
+  alias BattleNetwork.Tanks.Captain
 
   def start_link do
     GenServer.start_link(__MODULE__, %{status: :pending}, name: __MODULE__)
@@ -21,7 +23,8 @@ defmodule BattleNetwork.Runner do
   def handle_cast(:stop, state), do: {:noreply, %{status: :stopped}}
 
   def handle_info(:run_frame, %{status: :started} = state) do
-    BattleNetwork.Tanks.Captain.action
+    Marshall.resolve(Captain.commands)
+    Captain.action
 
     Process.send_after(
       self(),

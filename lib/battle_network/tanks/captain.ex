@@ -25,6 +25,8 @@ defmodule BattleNetwork.Tanks.Captain do
   end
 
   def handle_cast({:add, sergeant}, sergeants) do
+    {:ok, %{"id" => id}} = BattleNetwork.Link.post("https://api.battletank.nl/addplayer", sergeant)
+    sergeant = %Sergeant{sergeant | id: id}
     Sergeant.start_link(sergeant)
     {:noreply, [sergeant | sergeants]}
   end
