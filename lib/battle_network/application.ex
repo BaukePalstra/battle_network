@@ -21,10 +21,7 @@ defmodule BattleNetwork.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: BattleNetwork.Supervisor]
-    r = Supervisor.start_link(children, opts)
-    BattleNetwork.Tanks.Captain.add_sergeant("rosie")
-    BattleNetwork.Tanks.Captain.add_sergeant("kitt")
-    r
+    Supervisor.start_link(children, opts)
   end
 
   # Tell Phoenix to update the endpoint configuration

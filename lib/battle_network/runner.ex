@@ -39,6 +39,12 @@ defmodule BattleNetwork.Runner do
 
   def handle_info(_, state), do: {:noreply, state}
 
+  def addPlayers do
+    BattleNetwork.Tanks.Captain.add_sergeant("rosie")
+    BattleNetwork.Tanks.Captain.add_sergeant("kitt")
+    BattleNetwork.Tanks.Captain.add_sergeant("r2d2")
+  end
+
   def start do
     GenServer.cast(__MODULE__, :start)
   end
