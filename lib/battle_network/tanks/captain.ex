@@ -25,10 +25,13 @@ defmodule BattleNetwork.Tanks.Captain do
   end
 
   def handle_cast({:add, sergeant}, sergeants) do
-    {:ok, %{"id" => id}} = BattleNetwork.Link.post("https://api.battletank.nl/addplayer", sergeant)
-    sergeant = %Sergeant{sergeant | id: id}
-    Sergeant.start_link(sergeant)
-    {:noreply, [sergeant | sergeants]}
+    with {:ok, %{"id" => id}} <- BattleNetwork.Link.post("https://api.battletank.nl/addplayer", sergeant) do
+      sergeant = %Sergeant{sergeant | id: id}
+      Sergeant.start_link(sergeant)
+      {:noreply, [sergeant | sergeants]}
+    else
+      _ -> {:noreply, sergeants}
+    end
   end
 
   def handle_cast({:update, %{id: id} = sergeant}, sergeants) do
@@ -45,9 +48,7 @@ defmodule BattleNetwork.Tanks.Captain do
 
   def add_sergeant(name) do
     endpoint = "https://battletank.nl/#{name}"
-    #fetch id
-    id = name
-    GenServer.cast(__MODULE__, {:add, %Sergeant{name: name, id: id, command: %{}, health: 100, endpoint: endpoint}})
+    GenServer.cast(__MODULE__, {:add, %Sergeant{name: name, command: %{}, health: 100, endpoint: endpoint}})
   end
 
   def update_sergeant(sergeant) do

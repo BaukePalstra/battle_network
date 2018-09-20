@@ -1,6 +1,6 @@
 defmodule BattleNetwork.Tanks.Sergeant do
   use GenServer
-  alias BattleNetwork.Tanks.{Sergeant, Captain}
+  alias BattleNetwork.Tanks.{Captain}
   alias BattleNetwork.Field.{Marshall}
 
   defstruct [:id, :name, :health, :command, :endpoint]
@@ -14,9 +14,12 @@ defmodule BattleNetwork.Tanks.Sergeant do
   end
 
   def handle_call(:act, _from, state) do
-    {:ok, command} = BattleNetwork.Link.post(state.endpoint, Marshall.get)
-    state = Map.put(state, :command, command)
-    {:reply, state, state}
+    with {:ok, command} <- BattleNetwork.Link.post(state.endpoint, Marshall.get) do
+      refresh = Map.put(state, :command, command)
+      {:reply, refresh, refresh}
+    else
+      _ -> {:reply, state, state}
+    end
   end
 
   def act(sergeant) do

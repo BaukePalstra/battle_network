@@ -12,9 +12,11 @@ defmodule BattleNetwork.Field.Marshall do
   end
 
   def handle_cast({:resolve, commands}, field) do
-    # request with commands
-    {:ok, field} = BattleNetwork.Link.post("https://api.battletank.nl/tick", %{commands: commands})
-    {:noreply, field}
+    with {:ok, refresh} <- BattleNetwork.Link.post("https://api.battletank.nl/tick", %{commands: commands}) do
+      {:noreply, refresh}
+    else
+      _ -> {:noreply, field}
+    end
   end
 
   def get() do
