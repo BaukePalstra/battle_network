@@ -4,7 +4,7 @@ defmodule BattleNetwork.Tanks.Sergeant do
   defstruct [:id, :name, :health, :command]
 
   def start_link(sergeant) do
-    GenServer.start_link(__MODULE__, sergeant, name: sergeant.id)
+    GenServer.start_link(__MODULE__, sergeant, name: sergeant_id(sergeant.id))
   end
 
   def init(state) do
@@ -18,8 +18,8 @@ defmodule BattleNetwork.Tanks.Sergeant do
     {:reply, state, state}
   end
 
-  def act(id, state) do
-    GenServer.call(id, :act)
+  def act(sergeant) do
+    GenServer.call(sergeant_id(sergeant.id), :act)
   end
 
   def sergeant_id(id) do

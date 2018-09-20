@@ -10,6 +10,8 @@ defmodule BattleNetwork.Application do
     children = [
       # Start the endpoint when the application starts
       supervisor(BattleNetworkWeb.Endpoint, []),
+      worker(BattleNetwork.Runner, []),
+      worker(BattleNetwork.Tanks.Captain, []),
       # Start your own worker by calling: BattleNetwork.Worker.start_link(arg1, arg2, arg3)
       # worker(BattleNetwork.Worker, [arg1, arg2, arg3]),
     ]
