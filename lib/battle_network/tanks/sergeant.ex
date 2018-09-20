@@ -14,7 +14,8 @@ defmodule BattleNetwork.Tanks.Sergeant do
   def handle_call(:act, _from, state) do
     # Http request state.endpoint
     command = %{forward: 5}
-    {:reply, response, Map.put(state, :command, command)}
+    state = Map.put(state, :command, command)
+    {:reply, state, state}
   end
 
   def act(id, state) do

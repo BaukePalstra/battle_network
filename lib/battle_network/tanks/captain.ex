@@ -2,7 +2,7 @@ defmodule BattleNetwork.Tanks.Captain do
   use GenServer
   alias BattleNetwork.Tanks.Sergeant
 
-  def start_link(_) dostate
+  def start_link(_) do
     GenServer.start_link(__MODULE__, [], name: __MODULE__)
   end
 
@@ -10,20 +10,43 @@ defmodule BattleNetwork.Tanks.Captain do
     {:ok, state}
   end
 
-  def handle_call(:action, _from, sergeants) do
-    # Http request state.endpoint
-    for sergeant <- sergeants do
-      Sergeant.act(Map.get(sergeant.id))
+  def handle_cast(:action, _from, sergeants) do
+    {:noreply, sergeants}
+  end
+
+  def handle_call(:commands, _from, sergeants) do
+    commands = for sergeant <- sergeants do
+      Map.merge(sergeant.command, %{player_id: sergeant.id})
     end
 
-    {:reply, response, Map.put(state, :command, command)}
+    {:reply, commands, sergeants}
+  end
+
+  def handle_cast({:add, sergeant}, _from, sergeants) do
+    {:noreply, [sergeant | sergeants]}
+  end
+
+  def handle_cast({:update, %{id: id} = sergeant}, _from, sergeants) do
+    sergeants = Enum.map(fn
+      %{id: ^id} -> sergeant
+      s -> s
+    end)
+    {:noreply, sergeants}
   end
 
   def action() do
     GenServer.call(__MODULE__, :action)
   end
 
-  defp sergeant_id(id) do
-    String.to_atom("sergeant_#{id}")
+  def add_sergeant(sergeant) do
+    GenServer.call(__MODULE__, :add)
+  end
+
+  def update_sergeant(sergeant) do
+    GenServer.call(__MODULE__, :update)
+  end
+
+  def commands do
+    GenServer.call(__MODULE__, :commands)
   end
 end
